@@ -59,7 +59,7 @@ struct airspeed_validator_update_data {
 	bool lpos_valid;
 	float lpos_evh;
 	float lpos_evv;
-	float att_q[4];
+	matrix::Quatf q_att;
 	float air_pressure_pa;
 	float air_temperature_celsius;
 	float accel_z;
@@ -87,8 +87,8 @@ public:
 	airspeed_wind_s get_wind_estimator_states(uint64_t timestamp);
 
 	// setters wind estimator parameters
-	void set_wind_estimator_wind_p_noise(float wind_sigma) { _wind_estimator.set_wind_p_noise(wind_sigma); }
-	void set_wind_estimator_tas_scale_p_noise(float tas_scale_sigma) { _wind_estimator.set_tas_scale_p_noise(tas_scale_sigma); }
+	void set_wind_estimator_wind_process_noise_spectral_density(float wind_nsd) { _wind_estimator.set_wind_process_noise_spectral_density(wind_nsd); }
+	void set_wind_estimator_tas_scale_process_noise_spectral_density(float tas_scale_nsd) { _wind_estimator.set_tas_scale_process_noise_spectral_density(tas_scale_nsd); }
 	void set_wind_estimator_tas_scale_init(float tas_scale_init)
 	{
 		_tas_scale_init = tas_scale_init;
@@ -179,7 +179,7 @@ private:
 
 	void update_wind_estimator(const uint64_t timestamp, float airspeed_true_raw, bool lpos_valid,
 				   const matrix::Vector3f &vI,
-				   float lpos_evh, float lpos_evv, const float att_q[4]);
+				   float lpos_evh, float lpos_evv, const Quatf &q_att);
 	void update_CAS_scale_validated(bool lpos_valid, const matrix::Vector3f &vI, float airspeed_true_raw);
 	void update_CAS_scale_applied();
 	void update_CAS_TAS(float air_pressure_pa, float air_temperature_celsius);

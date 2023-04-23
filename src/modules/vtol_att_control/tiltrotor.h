@@ -44,6 +44,9 @@
 #include <parameters/param.h>
 #include <drivers/drv_hrt.h>
 
+#include <uORB/Publication.hpp>
+#include <uORB/topics/tiltrotor_extra_controls.h>
+
 class Tiltrotor : public VtolType
 {
 
@@ -58,7 +61,6 @@ public:
 	void update_mc_state() override;
 	void update_fw_state() override;
 	void waiting_on_tecs() override;
-	float thrust_compensation_for_tilt();
 	void blendThrottleAfterFrontTransition(float scale) override;
 
 private:
@@ -76,11 +78,9 @@ private:
 	 * they need to idle otherwise they need too much time to spin up for mc mode.
 	 */
 
+	vtol_mode _vtol_mode{vtol_mode::MC_MODE};			/**< vtol flight mode, defined by enum vtol_mode */
 
-	struct {
-		vtol_mode flight_mode;			/**< vtol flight mode, defined by enum vtol_mode */
-		hrt_abstime transition_start;	/**< absoulte time at which front transition started */
-	} _vtol_schedule;
+	uORB::Publication<tiltrotor_extra_controls_s>	_tiltrotor_extra_controls_pub{ORB_ID(tiltrotor_extra_controls)};
 
 	float _tilt_control{0.0f};		/**< actuator value for the tilt servo */
 
@@ -89,7 +89,7 @@ private:
 	float moveLinear(float start, float stop, float progress);
 
 	void blendThrottleDuringBacktransition(const float scale, const float target_throttle);
-
+	bool isFrontTransitionCompletedBase() override;
 
 	hrt_abstime _last_timestamp_disarmed{0}; /**< used for calculating time since arming */
 	bool _tilt_motors_for_startup{false};

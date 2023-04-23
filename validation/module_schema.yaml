@@ -154,6 +154,7 @@ parameters:
                                 'S', 'A/%', '(m/s^2)^2',  'm/m',  'tan(rad)^2', '(m/s)^2', 'm/rad',
                                 'm/s^3/sqrt(Hz)', 'm/s/sqrt(Hz)', 's/(1000*PWM)', '%m/s', 'min', 'us/C', 
                                 'N/(m/s)', 'Nm/(rad/s)', 'Nm', 'N',
+                                'rpm',
                                 'normalized_thrust/s', 'normalized_thrust', 'norm', 'SD']
                         bit:
                             # description of all bits for type bitmask.
@@ -194,7 +195,7 @@ parameters:
                         volatile:
                             # Optional volatile flag. Set to true if the
                             # parameter can be changed by the system
-                            # automatially
+                            # automatically
                             type: boolean
                         reboot_required:
                             # set to true, if changing of the parameter requires
